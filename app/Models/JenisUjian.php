@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JenisUjian extends Model
 {
+    use HasFactory;
+
     protected $table = 'jenis_ujian';
 
     protected $fillable = [
@@ -14,4 +17,12 @@ class JenisUjian extends Model
     ];
 
     public $timestamps = true;
+
+    /**
+     * Relasi dengan soal
+     */
+    public function soals()
+    {
+        return $this->hasMany(Soal::class, 'jenis_ujian', 'nama');
+    }
 }
