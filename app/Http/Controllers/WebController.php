@@ -170,15 +170,18 @@ class WebController extends Controller
     }
     public function latihanSoalTipe($id)
     {
+        // Ambil semua jenis ujian dari database
+        $jenisUjianList = \App\Models\JenisUjian::all();
+
         return view('tipe-ujian', [
-            'mapel_id' => $id
+            'mapel_id' => $id,
+            'jenisUjianList' => $jenisUjianList
         ]);
     }
 
     public function latihansoal(Request $request, $id)
     {
         $user = Auth::user();
-
         $tipe = $request->query('tipe');
 
         if (!isset($tipe)) {
@@ -186,8 +189,14 @@ class WebController extends Controller
                 ->with('error', 'Ops, harap pilih jenis UJIAN');
         }
 
-        if (isset($user->kelas_id)) {
+        // Validasi apakah jenis ujian valid
+        $jenisUjianValid = \App\Models\JenisUjian::pluck('nama')->toArray();
+        if (!in_array($tipe, $jenisUjianValid)) {
+            return redirect()->route('latihan.soal.tipe', ['id' => $id])
+                ->with('error', 'Jenis ujian tidak valid');
+        }
 
+        if (isset($user->kelas_id)) {
             $kelas = Kelas::with('mataPelajarans')->where('id', $id)->first();
 
             if (!$kelas) {
@@ -214,7 +223,6 @@ class WebController extends Controller
                         $decoded = json_decode($soal->pencocokan, true);
                         $soal->pencocokan_items = is_array($decoded) ? $decoded : [];
                     }
-
                     return $soal;
                 });
 
@@ -225,7 +233,6 @@ class WebController extends Controller
                 ->shuffle()
                 ->values()
                 ->toArray();
-            // dd($soals);
 
             return view('latihansoal', [
                 'menuActive' => 'kuis',
@@ -337,7 +344,6 @@ class WebController extends Controller
                     }
                 }
             }
-
         }
 
         $score = 100 / $jumlah * $benar;
@@ -451,252 +457,252 @@ class WebController extends Controller
         return redirect()->route('kuis.soal.show', ['nomor' => 1]);
     }
     public function selesai()
-{
-    // Ambil data jawaban dari session
-    $jawaban = session('jawaban_soal', []);
+    {
+        // Ambil data jawaban dari session
+        $jawaban = session('jawaban_soal', []);
 
-    // Ambil info soal untuk menampilkan jumlah soal
-    $matapelajaran_id = session('kuis_matapelajaran_id');
-    $jenis_ujian = session('kuis_jenis_ujian');
-    $query = Soal::orderBy('id');
-    if ($matapelajaran_id) {
-        $query->where('matapelajaran_id', $matapelajaran_id);
+        // Ambil info soal untuk menampilkan jumlah soal
+        $matapelajaran_id = session('kuis_matapelajaran_id');
+        $jenis_ujian = session('kuis_jenis_ujian');
+        $query = Soal::orderBy('id');
+        if ($matapelajaran_id) {
+            $query->where('matapelajaran_id', $matapelajaran_id);
+        }
+        if ($jenis_ujian) {
+            $query->where('jenis_ujian', $jenis_ujian);
+        }
+        $soals = $query->get();
+        $totalSoal = $soals->count();
+
+        // Nomor lebih dari total soal supaya view menampilkan halaman selesai
+        $nomor = $totalSoal + 1;
+
+        return view('latihansoal', [
+            'soal' => null,
+            'nomor' => $nomor,
+            'totalSoal' => $totalSoal,
+            'jawaban' => $jawaban,
+            'timer' => 0, // Tidak perlu timer di halaman selesai
+        ]);
     }
-    if ($jenis_ujian) {
-        $query->where('jenis_ujian', $jenis_ujian);
-    }
-    $soals = $query->get();
-    $totalSoal = $soals->count();
-
-    // Nomor lebih dari total soal supaya view menampilkan halaman selesai
-    $nomor = $totalSoal + 1;
-
-    return view('latihansoal', [
-        'soal' => null,
-        'nomor' => $nomor,
-        'totalSoal' => $totalSoal,
-        'jawaban' => $jawaban,
-        'timer' => 0, // Tidak perlu timer di halaman selesai
-    ]);
-}
 
 
     public function showSoal($nomor, Request $request)
-{
-    $matapelajaran_id = session('kuis_matapelajaran_id');
-    $jenis_ujian = session('kuis_jenis_ujian');
+    {
+        $matapelajaran_id = session('kuis_matapelajaran_id');
+        $jenis_ujian = session('kuis_jenis_ujian');
 
-    $query = Soal::orderBy('id');
-    if ($matapelajaran_id) {
-        $query->where('matapelajaran_id', $matapelajaran_id);
-    }
-    if ($jenis_ujian) {
-        $query->where('jenis_ujian', $jenis_ujian);
-    }
-
-    $soals = $query->get();
-    $total = $soals->count();
-
-    if ($nomor < 1 || $nomor > $total) {
-        return redirect()->route('kuis.soal.show', ['nomor' => 1]);
-    }
-
-    $soal = $soals[$nomor - 1];
-    $id_soal = $soal->id;
-
-    // Ambil jawaban dari session jika sudah ada
-    $jawaban_session = session('jawaban_soal', []);
-    $jawaban = $jawaban_session[$id_soal] ?? null;
-
-    return view('latihansoal', [
-        'soal' => $soal,
-        'nomor' => $nomor,
-        'totalSoal' => $total,
-        'jawaban' => $jawaban,
-        'timer' => 90, // Atur timer sesuai kebutuhan
-    ]);
-}
-
-
-protected function hitungNilai($soals, $jawaban)
-{
-    $benar = 0;
-    $total = $soals->count();
-
-    foreach ($soals as $soal) {
-        $id = $soal->id;
-
-        if (!isset($jawaban[$id])) {
-            \Log::info("Soal ID $id - Jawaban Siswa:", ['jawaban' => $jawaban[$id]]);
-        \Log::info("Soal ID $id - Kunci Jawaban:", ['kunci' => $soal->kunci_jawaban]);
-            // Jawaban tidak ada, anggap salah
-            continue;
+        $query = Soal::orderBy('id');
+        if ($matapelajaran_id) {
+            $query->where('matapelajaran_id', $matapelajaran_id);
+        }
+        if ($jenis_ujian) {
+            $query->where('jenis_ujian', $jenis_ujian);
         }
 
-        switch ($soal->jenis_soal) {
-            case 'pilihan_ganda':
-                // Bandingkan jawaban siswa dengan kunci jawaban (string)
-                if ($jawaban[$id] == $soal->kunci_jawaban) {
-                    $benar++;
-                }
-                break;
+        $soals = $query->get();
+        $total = $soals->count();
 
-            case 'pilihan_ganda_kompleks':
-                // Kunci jawaban disimpan sebagai JSON array
-                $kunci = is_array($soal->kunci_jawaban) ? $soal->kunci_jawaban : json_decode($soal->kunci_jawaban, true);
-                // Jawaban siswa bisa array atau JSON string
-                $pilihanUser = is_array($jawaban[$id]) ? $jawaban[$id] : json_decode($jawaban[$id], true);
+        if ($nomor < 1 || $nomor > $total) {
+            return redirect()->route('kuis.soal.show', ['nomor' => 1]);
+        }
 
-                if (is_array($kunci) && is_array($pilihanUser)) {
-                    // Sort agar urutan tidak mempengaruhi perbandingan
-                    sort($kunci);
-                    sort($pilihanUser);
-                    if ($kunci == $pilihanUser) {
+        $soal = $soals[$nomor - 1];
+        $id_soal = $soal->id;
+
+        // Ambil jawaban dari session jika sudah ada
+        $jawaban_session = session('jawaban_soal', []);
+        $jawaban = $jawaban_session[$id_soal] ?? null;
+
+        return view('latihansoal', [
+            'soal' => $soal,
+            'nomor' => $nomor,
+            'totalSoal' => $total,
+            'jawaban' => $jawaban,
+            'timer' => 90, // Atur timer sesuai kebutuhan
+        ]);
+    }
+
+
+    protected function hitungNilai($soals, $jawaban)
+    {
+        $benar = 0;
+        $total = $soals->count();
+
+        foreach ($soals as $soal) {
+            $id = $soal->id;
+
+            if (!isset($jawaban[$id])) {
+                \Log::info("Soal ID $id - Jawaban Siswa:", ['jawaban' => $jawaban[$id]]);
+                \Log::info("Soal ID $id - Kunci Jawaban:", ['kunci' => $soal->kunci_jawaban]);
+                // Jawaban tidak ada, anggap salah
+                continue;
+            }
+
+            switch ($soal->jenis_soal) {
+                case 'pilihan_ganda':
+                    // Bandingkan jawaban siswa dengan kunci jawaban (string)
+                    if ($jawaban[$id] == $soal->kunci_jawaban) {
                         $benar++;
                     }
-                }
-                break;
+                    break;
 
-            case 'uraian_singkat':
-                // Bandingkan tanpa case sensitive dan trim spasi
-                if (strcasecmp(trim($jawaban[$id]), trim($soal->kunci_jawaban)) == 0) {
-                    $benar++;
-                }
-                break;
+                case 'pilihan_ganda_kompleks':
+                    // Kunci jawaban disimpan sebagai JSON array
+                    $kunci = is_array($soal->kunci_jawaban) ? $soal->kunci_jawaban : json_decode($soal->kunci_jawaban, true);
+                    // Jawaban siswa bisa array atau JSON string
+                    $pilihanUser = is_array($jawaban[$id]) ? $jawaban[$id] : json_decode($jawaban[$id], true);
 
-            case 'menjodohkan':
-                // Kunci jawaban dan jawaban siswa disimpan sebagai array asosiatif
-                $kunci = is_array($soal->kunci_jawaban) ? $soal->kunci_jawaban : json_decode($soal->kunci_jawaban, true);
-                $pilihanUser = is_array($jawaban[$id]) ? $jawaban[$id] : json_decode($jawaban[$id], true);
-
-                if (is_array($kunci) && is_array($pilihanUser)) {
-                    // Cek jumlah pasangan sama
-                    if (count($kunci) == count($pilihanUser)) {
-                        $cocok = true;
-                        foreach ($kunci as $k => $v) {
-                            // Pastikan setiap pasangan cocok
-                            if (!isset($pilihanUser[$k]) || $pilihanUser[$k] != $v) {
-                                $cocok = false;
-                                break;
-                            }
-                        }
-                        if ($cocok) {
+                    if (is_array($kunci) && is_array($pilihanUser)) {
+                        // Sort agar urutan tidak mempengaruhi perbandingan
+                        sort($kunci);
+                        sort($pilihanUser);
+                        if ($kunci == $pilihanUser) {
                             $benar++;
                         }
                     }
-                }
-                break;
+                    break;
 
-            default:
-                // Soal jenis lain dianggap salah
-                break;
+                case 'uraian_singkat':
+                    // Bandingkan tanpa case sensitive dan trim spasi
+                    if (strcasecmp(trim($jawaban[$id]), trim($soal->kunci_jawaban)) == 0) {
+                        $benar++;
+                    }
+                    break;
+
+                case 'menjodohkan':
+                    // Kunci jawaban dan jawaban siswa disimpan sebagai array asosiatif
+                    $kunci = is_array($soal->kunci_jawaban) ? $soal->kunci_jawaban : json_decode($soal->kunci_jawaban, true);
+                    $pilihanUser = is_array($jawaban[$id]) ? $jawaban[$id] : json_decode($jawaban[$id], true);
+
+                    if (is_array($kunci) && is_array($pilihanUser)) {
+                        // Cek jumlah pasangan sama
+                        if (count($kunci) == count($pilihanUser)) {
+                            $cocok = true;
+                            foreach ($kunci as $k => $v) {
+                                // Pastikan setiap pasangan cocok
+                                if (!isset($pilihanUser[$k]) || $pilihanUser[$k] != $v) {
+                                    $cocok = false;
+                                    break;
+                                }
+                            }
+                            if ($cocok) {
+                                $benar++;
+                            }
+                        }
+                    }
+                    break;
+
+                default:
+                    // Soal jenis lain dianggap salah
+                    break;
+            }
         }
+
+        // Hitung nilai dalam persen
+        $nilai = ($total > 0) ? round(($benar / $total) * 100) : 0;
+
+        return [
+            'benar' => $benar,
+            'total' => $total,
+            'nilai' => $nilai,
+        ];
     }
-
-    // Hitung nilai dalam persen
-    $nilai = ($total > 0) ? round(($benar / $total) * 100) : 0;
-
-    return [
-        'benar' => $benar,
-        'total' => $total,
-        'nilai' => $nilai,
-    ];
-}
 
     public function submitSoal(Request $request, $nomor)
-{
-    $matapelajaran_id = session('kuis_matapelajaran_id');
-    $jenis_ujian = session('kuis_jenis_ujian');
+    {
+        $matapelajaran_id = session('kuis_matapelajaran_id');
+        $jenis_ujian = session('kuis_jenis_ujian');
 
-    $query = Soal::orderBy('id');
-    if ($matapelajaran_id) {
-        $query->where('matapelajaran_id', $matapelajaran_id);
-    }
-    if ($jenis_ujian) {
-        $query->where('jenis_ujian', $jenis_ujian);
-    }
-    $soals = $query->get();
-    $total = $soals->count();
-
-    if ($nomor < 1 || $nomor > $total) {
-        return redirect()->route('kuis.soal.show', ['nomor' => 1]);
-    }
-
-    $soal = $soals[$nomor - 1];
-    $id_soal = $soal->id;
-
-    // Ambil session jawaban
-    $jawaban_session = session('jawaban_soal', []);
-
-    // Simpan jawaban sesuai tipe soal
-    if ($soal->jenis_soal == 'pilihan_ganda' || $soal->jenis_soal == 'uraian_singkat') {
-        $jawaban_session[$id_soal] = $request->input('jawaban');
-    } elseif ($soal->jenis_soal == 'pilihan_ganda_kompleks' || $soal->jenis_soal == 'menjodohkan') {
-        $jawaban_session[$id_soal] = $request->input('jawaban', []);
-    }
-
-    session(['jawaban_soal' => $jawaban_session]);
-
-    // Navigasi
-    if ($request->has('next')) {
-        if ($nomor < $total) {
-            return redirect()->route('kuis.soal.show', ['nomor' => $nomor + 1]);
-        } else {
-            // Soal terakhir, simpan hasil ujian terlebih dahulu
-            return $this->simpanHasilUjian();
+        $query = Soal::orderBy('id');
+        if ($matapelajaran_id) {
+            $query->where('matapelajaran_id', $matapelajaran_id);
         }
-    }
-
-    if ($request->has('prev')) {
-        if ($nomor > 1) {
-            return redirect()->route('kuis.soal.show', ['nomor' => $nomor - 1]);
+        if ($jenis_ujian) {
+            $query->where('jenis_ujian', $jenis_ujian);
         }
+        $soals = $query->get();
+        $total = $soals->count();
+
+        if ($nomor < 1 || $nomor > $total) {
+            return redirect()->route('kuis.soal.show', ['nomor' => 1]);
+        }
+
+        $soal = $soals[$nomor - 1];
+        $id_soal = $soal->id;
+
+        // Ambil session jawaban
+        $jawaban_session = session('jawaban_soal', []);
+
+        // Simpan jawaban sesuai tipe soal
+        if ($soal->jenis_soal == 'pilihan_ganda' || $soal->jenis_soal == 'uraian_singkat') {
+            $jawaban_session[$id_soal] = $request->input('jawaban');
+        } elseif ($soal->jenis_soal == 'pilihan_ganda_kompleks' || $soal->jenis_soal == 'menjodohkan') {
+            $jawaban_session[$id_soal] = $request->input('jawaban', []);
+        }
+
+        session(['jawaban_soal' => $jawaban_session]);
+
+        // Navigasi
+        if ($request->has('next')) {
+            if ($nomor < $total) {
+                return redirect()->route('kuis.soal.show', ['nomor' => $nomor + 1]);
+            } else {
+                // Soal terakhir, simpan hasil ujian terlebih dahulu
+                return $this->simpanHasilUjian();
+            }
+        }
+
+        if ($request->has('prev')) {
+            if ($nomor > 1) {
+                return redirect()->route('kuis.soal.show', ['nomor' => $nomor - 1]);
+            }
+        }
+
+        // Default redirect ke soal sekarang
+        return redirect()->route('kuis.soal.show', ['nomor' => $nomor]);
     }
 
-    // Default redirect ke soal sekarang
-    return redirect()->route('kuis.soal.show', ['nomor' => $nomor]);
-}
 
+    public function simpanHasilUjian()
+    {
+        $user_id = auth()->id();
+        $matapelajaran_id = session('kuis_matapelajaran_id');
+        $jenis_ujian = session('kuis_jenis_ujian');
+        $jawaban = session('jawaban_soal', []);
 
-public function simpanHasilUjian()
-{
-    $user_id = auth()->id();
-    $matapelajaran_id = session('kuis_matapelajaran_id');
-    $jenis_ujian = session('kuis_jenis_ujian');
-    $jawaban = session('jawaban_soal', []);
+        if (empty($jawaban)) {
+            return redirect()->back()->with('error', 'Tidak ada jawaban yang disubmit.');
+        }
 
-    if (empty($jawaban)) {
-        return redirect()->back()->with('error', 'Tidak ada jawaban yang disubmit.');
+        $soals = Soal::where('matapelajaran_id', $matapelajaran_id)
+            ->where('jenis_ujian', $jenis_ujian)
+            ->get();
+
+        // Gunakan method hitungNilai untuk perhitungan benar dan nilai
+        $hasil = $this->hitungNilai($soals, $jawaban);
+
+        HasilUjian::updateOrCreate(
+            [
+                'user_id' => $user_id,
+                'matapelajaran_id' => $matapelajaran_id,
+                'jenis_ujian' => $jenis_ujian,
+            ],
+            [
+                'jumlah_soal' => $hasil['total'],
+                'jawaban_benar' => $hasil['benar'],
+                'nilai' => $hasil['nilai'],
+                'tanggal_ujian' => now(),
+            ]
+        );
+
+        // Hapus session jawaban setelah submit
+        session()->forget('jawaban_soal');
+        session()->forget('kuis_matapelajaran_id');
+        session()->forget('kuis_jenis_ujian');
+
+        return redirect()->route('kuis.selesai')->with('success', 'Hasil ujian berhasil disimpan.');
     }
-
-    $soals = Soal::where('matapelajaran_id', $matapelajaran_id)
-        ->where('jenis_ujian', $jenis_ujian)
-        ->get();
-
-    // Gunakan method hitungNilai untuk perhitungan benar dan nilai
-    $hasil = $this->hitungNilai($soals, $jawaban);
-
-    HasilUjian::updateOrCreate(
-        [
-            'user_id' => $user_id,
-            'matapelajaran_id' => $matapelajaran_id,
-            'jenis_ujian' => $jenis_ujian,
-        ],
-        [
-            'jumlah_soal' => $hasil['total'],
-            'jawaban_benar' => $hasil['benar'],
-            'nilai' => $hasil['nilai'],
-            'tanggal_ujian' => now(),
-        ]
-    );
-
-    // Hapus session jawaban setelah submit
-    session()->forget('jawaban_soal');
-    session()->forget('kuis_matapelajaran_id');
-    session()->forget('kuis_jenis_ujian');
-
-    return redirect()->route('kuis.selesai')->with('success', 'Hasil ujian berhasil disimpan.');
-}
 
 
     public function changePassword()
@@ -722,10 +728,5 @@ public function simpanHasilUjian()
         Alert::success('berhasil mengganti password');
 
         return redirect()->back()->with('success', 'berhasil mengganti password');
-
     }
-
-
 }
-
-
