@@ -1,5 +1,5 @@
 ## About
-Eduzius adalah aplikasi E-Learning untuk kebutuhan tugas akhir mahasiswa UMY
+LearningSMARTA adalah E-Learning untuk kebutuhan tugas akhir Capstone Project UB
 
 ### Requirements
 - HTML, CSS, dan Javascript
@@ -18,5 +18,3 @@ Eduzius adalah aplikasi E-Learning untuk kebutuhan tugas akhir mahasiswa UMY
 - DataTables CLient Side
 - SweetAlert
 
-### Developer
-Dibuat dan dikembangkan oleh [Muhammad Irfan Permana, S.Kom.](https://wa.me/+6283140617623)
