@@ -37,15 +37,19 @@ class SoalController extends Controller
             'isEdit'     => false,
             'url'        => route('admin.soal.store'),
             'mata_pelajarans' => MataPelajaran::all(),
+            'jenis_ujian_list' => JenisUjian::all(), // Tambahkan ini
             'plainMenjodohkan' => '', // Untuk textarea menjodohkan saat create
         ]);
     }
 
     public function store(Request $request)
     {
+        // Update validasi untuk mendukung semua jenis ujian dari database
+        $jenisUjianValid = JenisUjian::pluck('nama')->toArray();
+
         $request->validate([
             'matapelajaran_id' => 'required|exists:mata_pelajarans,id',
-            'jenis_ujian' => 'required|in:UTS,UAS',
+            'jenis_ujian' => 'required|in:' . implode(',', $jenisUjianValid),
             'jenis_soal' => 'required',
             'pertanyaan' => 'required',
         ]);
@@ -77,11 +81,11 @@ class SoalController extends Controller
             }
             $soal->pencocokan = json_encode($pairs);
         } elseif ($soal->jenis_soal == 'pilihan_ganda') {
-            $soal->pilihan_a = $request->pilihan_a;
-            $soal->pilihan_b = $request->pilihan_b;
-            $soal->pilihan_c = $request->pilihan_c;
-            $soal->pilihan_d = $request->pilihan_d;
-            $soal->pilihan_e = $request->pilihan_e;
+            $soal->pilihan_a = $request->pilihanganda_a;
+            $soal->pilihan_b = $request->pilihanganda_b;
+            $soal->pilihan_c = $request->pilihanganda_c;
+            $soal->pilihan_d = $request->pilihanganda_d;
+            $soal->pilihan_e = $request->pilihanganda_e;
             $soal->kunci_jawaban = $request->kunci_jawaban;
         } elseif ($soal->jenis_soal == 'pilihan_ganda_kompleks') {
             $soal->pilihan_a = $request->pilihan_a;
@@ -120,15 +124,19 @@ class SoalController extends Controller
             'url'        => route('admin.soal.update', $id),
             'data'       => $soal,
             'mata_pelajarans' => MataPelajaran::all(),
+            'jenis_ujian_list' => JenisUjian::all(), // Tambahkan ini
             'plainMenjodohkan' => $plainMenjodohkan,
         ]);
     }
 
     public function update(Request $request, $id)
     {
+        // Update validasi untuk mendukung semua jenis ujian dari database
+        $jenisUjianValid = JenisUjian::pluck('nama')->toArray();
+
         $request->validate([
             'matapelajaran_id' => 'required|exists:mata_pelajarans,id',
-            'jenis_ujian' => 'required|in:UTS,UAS',
+            'jenis_ujian' => 'required|in:' . implode(',', $jenisUjianValid),
             'jenis_soal' => 'required',
             'pertanyaan' => 'required',
         ]);
