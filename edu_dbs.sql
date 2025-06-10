@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Waktu pembuatan: 21 Bulan Mei 2025 pada 08.41
--- Versi server: 10.4.27-MariaDB
--- Versi PHP: 8.1.12
+-- Generation Time: Jun 10, 2025 at 02:31 PM
+-- Server version: 10.6.15-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `failed_jobs`
+-- Table structure for table `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
@@ -40,7 +40,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `forums`
+-- Table structure for table `forums`
 --
 
 CREATE TABLE `forums` (
@@ -53,7 +53,7 @@ CREATE TABLE `forums` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `forums`
+-- Dumping data for table `forums`
 --
 
 INSERT INTO `forums` (`id`, `judul`, `konten`, `user_id`, `created_at`, `updated_at`) VALUES
@@ -62,7 +62,7 @@ INSERT INTO `forums` (`id`, `judul`, `konten`, `user_id`, `created_at`, `updated
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `forum_replies`
+-- Table structure for table `forum_replies`
 --
 
 CREATE TABLE `forum_replies` (
@@ -75,17 +75,18 @@ CREATE TABLE `forum_replies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `forum_replies`
+-- Dumping data for table `forum_replies`
 --
 
 INSERT INTO `forum_replies` (`id`, `forum_id`, `user_id`, `konten`, `created_at`, `updated_at`) VALUES
 (1, 2, 2, 'Ada yang paham nggak ya tentang apa itu algoritma?', '2025-05-10 02:43:17', '2025-05-10 02:43:17'),
-(2, 2, 2, 'gapaham sy', '2025-05-11 05:49:40', '2025-05-11 05:49:40');
+(2, 2, 2, 'gapaham sy', '2025-05-11 05:49:40', '2025-05-11 05:49:40'),
+(3, 2, 2, 'iyaa paham', '2025-06-10 11:09:37', '2025-06-10 11:09:37');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `hasil_ujian`
+-- Table structure for table `hasil_ujian`
 --
 
 CREATE TABLE `hasil_ujian` (
@@ -102,17 +103,19 @@ CREATE TABLE `hasil_ujian` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `hasil_ujian`
+-- Dumping data for table `hasil_ujian`
 --
 
 INSERT INTO `hasil_ujian` (`id`, `user_id`, `matapelajaran_id`, `jenis_ujian`, `jumlah_soal`, `jawaban_benar`, `nilai`, `tanggal_ujian`, `created_at`, `updated_at`) VALUES
 (1, 2, 9, 'UAS', 4, 1, 25, '2025-05-19 03:36:45', '2025-05-19 03:36:45', '2025-05-19 03:36:45'),
-(4, 8, 9, 'UAS', 4, 2, 50, '2025-05-21 06:12:23', '2025-05-19 04:17:57', '2025-05-21 06:12:23');
+(4, 8, 9, 'UAS', 4, 2, 50, '2025-05-21 06:12:23', '2025-05-19 04:17:57', '2025-05-21 06:12:23'),
+(5, 2, 9, 'KUIS', 2, 0, 0, '2025-06-10 10:39:14', '2025-06-10 10:38:55', '2025-06-10 10:39:14'),
+(6, 2, 9, 'UTS', 1, 0, 0, '2025-06-10 10:56:27', '2025-06-10 10:56:27', '2025-06-10 10:56:27');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `jawabans`
+-- Table structure for table `jawabans`
 --
 
 CREATE TABLE `jawabans` (
@@ -127,7 +130,7 @@ CREATE TABLE `jawabans` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `jawabans`
+-- Dumping data for table `jawabans`
 --
 
 INSERT INTO `jawabans` (`id`, `tugas_id`, `nama`, `no_induk`, `file_jawab`, `user_id`, `created_at`, `updated_at`) VALUES
@@ -138,7 +141,7 @@ INSERT INTO `jawabans` (`id`, `tugas_id`, `nama`, `no_induk`, `file_jawab`, `use
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `jawaban_review`
+-- Table structure for table `jawaban_review`
 --
 
 CREATE TABLE `jawaban_review` (
@@ -152,7 +155,7 @@ CREATE TABLE `jawaban_review` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `jawaban_review`
+-- Dumping data for table `jawaban_review`
 --
 
 INSERT INTO `jawaban_review` (`id`, `review`, `nilai`, `file_feedback`, `created_at`, `updated_at`, `jawaban_id`) VALUES
@@ -161,7 +164,7 @@ INSERT INTO `jawaban_review` (`id`, `review`, `nilai`, `file_feedback`, `created
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `jenis_ujian`
+-- Table structure for table `jenis_ujian`
 --
 
 CREATE TABLE `jenis_ujian` (
@@ -173,17 +176,18 @@ CREATE TABLE `jenis_ujian` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `jenis_ujian`
+-- Dumping data for table `jenis_ujian`
 --
 
 INSERT INTO `jenis_ujian` (`id`, `nama`, `timer`, `created_at`, `updated_at`) VALUES
-(1, 'UAS', 90, '2025-05-16 02:49:08', '2025-05-19 02:38:33'),
-(2, 'UTS', 90, '2025-05-16 02:49:08', '2025-05-19 02:38:33');
+(1, 'UAS', 90, '2025-05-16 02:49:08', '2025-06-10 10:57:43'),
+(2, 'UTS', 90, '2025-05-16 02:49:08', '2025-06-10 10:57:43'),
+(3, 'KUIS', 30, '2025-06-10 10:12:55', '2025-06-10 10:57:43');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kelas`
+-- Table structure for table `kelas`
 --
 
 CREATE TABLE `kelas` (
@@ -195,7 +199,7 @@ CREATE TABLE `kelas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `kelas`
+-- Dumping data for table `kelas`
 --
 
 INSERT INTO `kelas` (`id`, `nama`, `slug`, `created_at`, `updated_at`) VALUES
@@ -214,7 +218,7 @@ INSERT INTO `kelas` (`id`, `nama`, `slug`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kelas_matapelajaran`
+-- Table structure for table `kelas_matapelajaran`
 --
 
 CREATE TABLE `kelas_matapelajaran` (
@@ -226,7 +230,7 @@ CREATE TABLE `kelas_matapelajaran` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `kelas_matapelajaran`
+-- Dumping data for table `kelas_matapelajaran`
 --
 
 INSERT INTO `kelas_matapelajaran` (`id`, `kelas_id`, `matapelajaran_id`, `created_at`, `updated_at`) VALUES
@@ -245,7 +249,7 @@ INSERT INTO `kelas_matapelajaran` (`id`, `kelas_id`, `matapelajaran_id`, `create
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kompetensis`
+-- Table structure for table `kompetensis`
 --
 
 CREATE TABLE `kompetensis` (
@@ -254,7 +258,7 @@ CREATE TABLE `kompetensis` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `kompetensis`
+-- Dumping data for table `kompetensis`
 --
 
 INSERT INTO `kompetensis` (`judul`, `deskripsi`) VALUES
@@ -264,7 +268,7 @@ INSERT INTO `kompetensis` (`judul`, `deskripsi`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `mata_pelajarans`
+-- Table structure for table `mata_pelajarans`
 --
 
 CREATE TABLE `mata_pelajarans` (
@@ -277,7 +281,7 @@ CREATE TABLE `mata_pelajarans` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `mata_pelajarans`
+-- Dumping data for table `mata_pelajarans`
 --
 
 INSERT INTO `mata_pelajarans` (`id`, `matapelajaran_id`, `nama`, `slug`, `created_at`, `updated_at`) VALUES
@@ -286,7 +290,7 @@ INSERT INTO `mata_pelajarans` (`id`, `matapelajaran_id`, `nama`, `slug`, `create
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -296,7 +300,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `migrations`
+-- Dumping data for table `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -326,7 +330,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `password_resets`
+-- Table structure for table `password_resets`
 --
 
 CREATE TABLE `password_resets` (
@@ -338,7 +342,7 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `personal_access_tokens`
+-- Table structure for table `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
@@ -356,7 +360,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `soals`
+-- Table structure for table `soals`
 --
 
 CREATE TABLE `soals` (
@@ -378,19 +382,22 @@ CREATE TABLE `soals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `soals`
+-- Dumping data for table `soals`
 --
 
 INSERT INTO `soals` (`id`, `pertanyaan`, `pilihan_a`, `pilihan_b`, `pilihan_c`, `pilihan_d`, `pilihan_e`, `kunci_jawaban`, `matapelajaran_id`, `created_at`, `updated_at`, `jenis_soal`, `uraian`, `pencocokan`, `jenis_ujian`) VALUES
 (51, 'Perangkat yang berfungsi untuk memproses data dalam komputer disebut …', 'Monitor', 'CPU', 'Keyboard', 'Printer', 'Mouse', 'b', 9, '2025-05-18 15:02:25', '2025-05-18 15:02:25', 'pilihan_ganda', NULL, NULL, 'UAS'),
 (52, 'BENAR atau SALAH\r\nWindows adalah perangkat keras komputer', NULL, NULL, NULL, NULL, NULL, NULL, 9, '2025-05-18 15:04:34', '2025-05-21 05:23:54', 'uraian_singkat', 'SALAH', NULL, 'UAS'),
 (53, 'Pilih semua pernyataan yang BENAR!', 'Mouse digunakan untuk mengarahkan kursor', 'Monitor merupakan perangkat input', 'Keyboard termasuk perangkat input', 'CPU berfungsi mencetak dokumen', 'Windows menyimpan data secara permanen', '[\"a\",\"c\"]', 9, '2025-05-18 23:07:26', '2025-05-18 23:07:26', 'pilihan_ganda_kompleks', NULL, NULL, 'UAS'),
-(55, 'Kolom A\r\nA. LAN\r\nB. MAN\r\nC. WAN\r\n\r\nKolom B\r\n1. Jaringan dalam satu gedung\r\n2. Jaringan antar kota\r\n3. Jaringan antar negara', NULL, NULL, NULL, NULL, NULL, NULL, 9, '2025-05-18 23:26:33', '2025-05-18 23:26:33', 'menjodohkan', NULL, '{\"A\":\"1\",\"B\":\"2\",\"C\":\"3\"}', 'UAS');
+(55, 'Kolom A\r\nA. LAN\r\nB. MAN\r\nC. WAN\r\n\r\nKolom B\r\n1. Jaringan dalam satu gedung\r\n2. Jaringan antar kota\r\n3. Jaringan antar negara', NULL, NULL, NULL, NULL, NULL, NULL, 9, '2025-05-18 23:26:33', '2025-05-18 23:26:33', 'menjodohkan', NULL, '{\"A\":\"1\",\"B\":\"2\",\"C\":\"3\"}', 'UAS'),
+(57, 'apa itu algoritma', 'abbsas', 'djhjsdjsd', 'asjsahjsa', 'jkajasjkssaa', 'wshswhsw', '[\"b\",\"d\"]', 9, '2025-06-10 10:37:39', '2025-06-10 10:37:39', 'pilihan_ganda_kompleks', NULL, NULL, 'KUIS'),
+(58, 'test ke 2', '1', '2', '3', '4', '5', 'a', 9, '2025-06-10 10:55:28', '2025-06-10 10:55:28', 'pilihan_ganda', NULL, NULL, 'UTS'),
+(59, 'apa itu komputasi awan', 'penyimpanan', 'asjkdjks', 'dhjdesjhsd', 'dhucsdjsd', 'ededesd', 'a', 9, '2025-06-10 10:58:22', '2025-06-10 10:58:22', 'pilihan_ganda', NULL, NULL, 'KUIS');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `topiks`
+-- Table structure for table `topiks`
 --
 
 CREATE TABLE `topiks` (
@@ -405,7 +412,7 @@ CREATE TABLE `topiks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `topiks`
+-- Dumping data for table `topiks`
 --
 
 INSERT INTO `topiks` (`id`, `matapelajaran_id`, `nama`, `kelas_id`, `konten`, `file`, `created_at`, `updated_at`) VALUES
@@ -418,7 +425,7 @@ INSERT INTO `topiks` (`id`, `matapelajaran_id`, `nama`, `kelas_id`, `konten`, `f
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `tugas`
+-- Table structure for table `tugas`
 --
 
 CREATE TABLE `tugas` (
@@ -433,7 +440,7 @@ CREATE TABLE `tugas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `tugas`
+-- Dumping data for table `tugas`
 --
 
 INSERT INTO `tugas` (`id`, `kelas_id`, `matapelajaran_id`, `konten`, `file`, `due_date`, `created_at`, `updated_at`) VALUES
@@ -446,7 +453,7 @@ INSERT INTO `tugas` (`id`, `kelas_id`, `matapelajaran_id`, `konten`, `file`, `du
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -463,12 +470,12 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `level`, `kelas_id`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'admin@gmail.com', NULL, '$2y$10$UAWjlNCOZhnMkmpAtTjzBO9qUUoIGNxFMzgby1kbnVSjeUPWuA30.', 'admin', NULL, 'sRuWlyKYogpq9GIv47JyBTqtr3dztyDD7p4svLHRAfnGhASrIdXU5EXjEVC7', '2025-04-29 05:45:13', '2025-05-21 04:13:19'),
-(2, 'Indah', 'indah@gmail.com', NULL, '$2y$10$5YYqvW9VYqYxiDrexXIMRu5F6n0.yNeyUJIiWe4Psp2p/GnBgnY8S', 'mahasiswa', 1, 'I4m1kbhthnsqgo43qZhjFYjzuLy2lzGLN8Sl3bvx0o0ZKOXNNjfrf1vCbLIN', '2025-04-29 05:45:13', '2025-04-29 05:45:13'),
+(1, 'admin', 'admin@gmail.com', NULL, '$2y$10$UAWjlNCOZhnMkmpAtTjzBO9qUUoIGNxFMzgby1kbnVSjeUPWuA30.', 'admin', NULL, 'Pv0zJXNExgBqS8ZAD2vlWnFTblW0kmCyWZbQGfKx4gU3NwjEBbpm8l8KMx9L', '2025-04-29 05:45:13', '2025-05-21 04:13:19'),
+(2, 'Indah', 'indah@gmail.com', NULL, '$2y$10$5YYqvW9VYqYxiDrexXIMRu5F6n0.yNeyUJIiWe4Psp2p/GnBgnY8S', 'mahasiswa', 1, 'caiszne98fY5hL5611hjWpH9V31v90UYJ45r1kLEriFnWNJWPOvGGnRmOE2E', '2025-04-29 05:45:13', '2025-04-29 05:45:13'),
 (6, 'hilwa', 'hilwaabror@gmail.com', NULL, '$2y$10$10wB32fdg4/n5doAx25C2edbw1uMja59sdQ7T5/v1F8V3QKOFKxou', 'mahasiswa', 2, NULL, '2025-05-11 05:52:11', '2025-05-11 05:52:19'),
 (7, 'Rahma Sekti Femiliyana K', 'rahmafemi863@gmail.com', NULL, '$2y$10$MzvI2q7mZ7BWP85oJrS88uvqhbGppPfrHbr7aIUyJzXIp0o0AvvWa', 'mahasiswa', 2, NULL, '2025-05-11 13:06:47', '2025-05-11 13:06:57'),
 (8, 'danes', 'danes@gmail.com', NULL, '$2y$10$.NOpFn33UAbb1/FJZryNJuiif63yRAhPkwiC5KPt.j9V9d43wpMfe', 'mahasiswa', 11, NULL, '2025-05-16 11:03:09', '2025-05-21 04:14:32');
@@ -478,53 +485,53 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `le
 --
 
 --
--- Indeks untuk tabel `failed_jobs`
+-- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indeks untuk tabel `forums`
+-- Indexes for table `forums`
 --
 ALTER TABLE `forums`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `forum_replies`
+-- Indexes for table `forum_replies`
 --
 ALTER TABLE `forum_replies`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `hasil_ujian`
+-- Indexes for table `hasil_ujian`
 --
 ALTER TABLE `hasil_ujian`
   ADD PRIMARY KEY (`id`),
   ADD KEY `hasil_ujian_user_id_foreign` (`user_id`);
 
 --
--- Indeks untuk tabel `jawabans`
+-- Indexes for table `jawabans`
 --
 ALTER TABLE `jawabans`
   ADD PRIMARY KEY (`id`),
   ADD KEY `jawabans_user_id_foreign` (`user_id`);
 
 --
--- Indeks untuk tabel `jawaban_review`
+-- Indexes for table `jawaban_review`
 --
 ALTER TABLE `jawaban_review`
   ADD PRIMARY KEY (`id`),
   ADD KEY `jawaban_review_jawaban_id_foreign` (`jawaban_id`);
 
 --
--- Indeks untuk tabel `jenis_ujian`
+-- Indexes for table `jenis_ujian`
 --
 ALTER TABLE `jenis_ujian`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `kelas`
+-- Indexes for table `kelas`
 --
 ALTER TABLE `kelas`
   ADD PRIMARY KEY (`id`),
@@ -532,7 +539,7 @@ ALTER TABLE `kelas`
   ADD UNIQUE KEY `kelas_slug_unique` (`slug`);
 
 --
--- Indeks untuk tabel `kelas_matapelajaran`
+-- Indexes for table `kelas_matapelajaran`
 --
 ALTER TABLE `kelas_matapelajaran`
   ADD PRIMARY KEY (`id`),
@@ -540,25 +547,25 @@ ALTER TABLE `kelas_matapelajaran`
   ADD KEY `kelas_matapelajaran_matapelajaran_id_foreign` (`matapelajaran_id`);
 
 --
--- Indeks untuk tabel `mata_pelajarans`
+-- Indexes for table `mata_pelajarans`
 --
 ALTER TABLE `mata_pelajarans`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `password_resets`
+-- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indeks untuk tabel `personal_access_tokens`
+-- Indexes for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -566,27 +573,27 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indeks untuk tabel `soals`
+-- Indexes for table `soals`
 --
 ALTER TABLE `soals`
   ADD PRIMARY KEY (`id`),
   ADD KEY `soals_materi_id_foreign` (`matapelajaran_id`);
 
 --
--- Indeks untuk tabel `topiks`
+-- Indexes for table `topiks`
 --
 ALTER TABLE `topiks`
   ADD PRIMARY KEY (`id`),
   ADD KEY `topiks_kelas_id_foreign` (`kelas_id`);
 
 --
--- Indeks untuk tabel `tugas`
+-- Indexes for table `tugas`
 --
 ALTER TABLE `tugas`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -594,136 +601,136 @@ ALTER TABLE `users`
   ADD KEY `users_kelas_id_foreign` (`kelas_id`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `failed_jobs`
+-- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `forums`
+-- AUTO_INCREMENT for table `forums`
 --
 ALTER TABLE `forums`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `forum_replies`
+-- AUTO_INCREMENT for table `forum_replies`
 --
 ALTER TABLE `forum_replies`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `hasil_ujian`
+-- AUTO_INCREMENT for table `hasil_ujian`
 --
 ALTER TABLE `hasil_ujian`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT untuk tabel `jawabans`
+-- AUTO_INCREMENT for table `jawabans`
 --
 ALTER TABLE `jawabans`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT untuk tabel `jawaban_review`
+-- AUTO_INCREMENT for table `jawaban_review`
 --
 ALTER TABLE `jawaban_review`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT untuk tabel `jenis_ujian`
+-- AUTO_INCREMENT for table `jenis_ujian`
 --
 ALTER TABLE `jenis_ujian`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `kelas`
+-- AUTO_INCREMENT for table `kelas`
 --
 ALTER TABLE `kelas`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT untuk tabel `kelas_matapelajaran`
+-- AUTO_INCREMENT for table `kelas_matapelajaran`
 --
 ALTER TABLE `kelas_matapelajaran`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
--- AUTO_INCREMENT untuk tabel `mata_pelajarans`
+-- AUTO_INCREMENT for table `mata_pelajarans`
 --
 ALTER TABLE `mata_pelajarans`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT untuk tabel `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT untuk tabel `personal_access_tokens`
+-- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `soals`
+-- AUTO_INCREMENT for table `soals`
 --
 ALTER TABLE `soals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
--- AUTO_INCREMENT untuk tabel `topiks`
+-- AUTO_INCREMENT for table `topiks`
 --
 ALTER TABLE `topiks`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT untuk tabel `tugas`
+-- AUTO_INCREMENT for table `tugas`
 --
 ALTER TABLE `tugas`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `hasil_ujian`
+-- Constraints for table `hasil_ujian`
 --
 ALTER TABLE `hasil_ujian`
   ADD CONSTRAINT `hasil_ujian_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `jawabans`
+-- Constraints for table `jawabans`
 --
 ALTER TABLE `jawabans`
   ADD CONSTRAINT `jawabans_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `jawaban_review`
+-- Constraints for table `jawaban_review`
 --
 ALTER TABLE `jawaban_review`
   ADD CONSTRAINT `jawaban_review_jawaban_id_foreign` FOREIGN KEY (`jawaban_id`) REFERENCES `jawabans` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `kelas_matapelajaran`
+-- Constraints for table `kelas_matapelajaran`
 --
 ALTER TABLE `kelas_matapelajaran`
   ADD CONSTRAINT `kelas_matapelajaran_kelas_id_foreign` FOREIGN KEY (`kelas_id`) REFERENCES `kelas` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `kelas_matapelajaran_matapelajaran_id_foreign` FOREIGN KEY (`matapelajaran_id`) REFERENCES `mata_pelajarans` (`id`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `topiks`
+-- Constraints for table `topiks`
 --
 ALTER TABLE `topiks`
   ADD CONSTRAINT `topiks_kelas_id_foreign` FOREIGN KEY (`kelas_id`) REFERENCES `kelas` (`id`) ON DELETE CASCADE;
